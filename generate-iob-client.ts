@@ -12,5 +12,5 @@ await generateApi({
 	patch: true,
 	modular: true,
 	url,
-	output: resolve('./src/lib/server/iob/client', import.meta.dir)
+	output: resolve(import.meta.dir, './src/lib/server/iob/client')
 });
