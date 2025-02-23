@@ -27,7 +27,7 @@ async function getMiobEntityFromRequest(db: DB, input: Request | FormData): Prom
 	if (typeof requestedId !== 'string') throw new Error('Invalid id');
 	const parsedId = parseInt(requestedId);
 	if (isNaN(parsedId)) throw new Error('Invalid id');
-	const entity = await db.query.miobEntity.findFirst({
+	const entity = await db.query.miobEntities.findFirst({
 		where({ id }, { eq }) {
 			return eq(id, parsedId);
 		}

@@ -2,8 +2,8 @@ import type { PageData } from './$types';
 
 type LightEntity = PageData['lights'][number];
 
-abstract class Device {
-	form = $state<HTMLFormElement>();
+export abstract class Device {
+	stateForm = $state<HTMLFormElement>();
 
 	entity: LightEntity;
 	state = $state<boolean>(false);
@@ -15,7 +15,7 @@ abstract class Device {
 }
 
 export function createDevice(props: LightEntity) {
-	if (props.type === 'dimmer') return new Dimmer(props, props.state, props.brightness);
+	if (props.type === 'dimmer') return new Dimmer(props, props.state, props.brightness!);
 	return new Switch(props, props.state);
 }
 
@@ -26,6 +26,8 @@ export class Switch extends Device {
 }
 
 export class Dimmer extends Device {
+	brightnessForm = $state<HTMLFormElement>();
+
 	brightness = $state<number>(0);
 
 	constructor(entity: LightEntity, state: boolean, brightness: number) {

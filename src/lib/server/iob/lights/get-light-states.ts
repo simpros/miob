@@ -1,8 +1,8 @@
-import type { MiobEntity } from '$lib/server/db/miob-entity';
 import type { Api } from '../client/Api';
+import type { AllLights } from './get-all-lights';
 import { generateIdentifierForState } from './light-utils';
 
-export async function getLightStates(entities: MiobEntity[], api: Api<unknown>) {
+export async function getLightStates(entities: AllLights, api: Api<unknown>) {
 	const [shellySwitches, zigbeeSwitches, shellyBrightness, zigbeeBrightness] = await Promise.all([
 		api.states
 			.listStates({ filter: generateIdentifierForState('shelly.*', 'dimmer', 'state') })
@@ -21,27 +21,18 @@ export async function getLightStates(entities: MiobEntity[], api: Api<unknown>) 
 	const switches = { ...shellySwitches, ...zigbeeSwitches };
 	const brightness = { ...shellyBrightness, ...zigbeeBrightness };
 
-	const lights = entities.map((entity) =>
-		entity.type === 'dimmer'
-			? ({
-					id: entity.id,
-					name: entity.name,
-					kind: entity.kind,
-					type: entity.type,
-					state:
-						switches[generateIdentifierForState(entity.iobId, entity.type, 'state')]?.val === true,
-					brightness: brightness[
-						generateIdentifierForState(entity.iobId, entity.type, 'brightness')
-					]?.val as number
-				} as const)
-			: ({
-					id: entity.id,
-					name: entity.name,
-					type: entity.type,
-					kind: entity.kind,
-					state:
-						switches[generateIdentifierForState(entity.iobId, entity.type, 'state')]?.val === true
-				} as const)
+	const lights = entities.map(
+		(entity) =>
+			({
+				...entity,
+				state:
+					switches[generateIdentifierForState(entity.iobId, entity.type, 'state')]?.val === true,
+				brightness:
+					entity.type === 'dimmer'
+						? (brightness[generateIdentifierForState(entity.iobId, entity.type, 'brightness')]
+								?.val as number | undefined)
+						: undefined
+			}) as const
 	);
 
 	return lights;

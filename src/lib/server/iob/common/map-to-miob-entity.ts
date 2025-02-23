@@ -21,6 +21,6 @@ export function mapToMiobEntity(iobId: string, obj: Object): CreateMiobEntity | 
 		...baseInformation,
 		name: common.name,
 		type: generateEntityType(baseInformation),
-		assignedTo: Object.keys(enums)[0]
+		roomId: Object.keys(enums)[0]
 	};
 }
