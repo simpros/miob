@@ -1,0 +1,35 @@
+# Ignore node_modules directory
+
+node_modules
+
+# Ignore bun's cache directory
+
+.bun
+
+# Ignore build output
+
+build
+
+# Ignore local environment files
+
+.env
+.env.local
+
+# Ignore Dockerfile and .dockerignore
+
+Dockerfile
+.dockerignore
+
+# Ignore git files
+
+.git
+.gitignore
+
+# Ignore logs
+
+logs
+\*.log
+
+# Ignore db files
+
+local.db\*

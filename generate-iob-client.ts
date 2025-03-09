@@ -1,5 +1,5 @@
-import { env } from 'bun';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
+import { cwd, env } from 'node:process';
 import { generateApi } from 'swagger-typescript-api';
 
 const url = env.IOBROKER_SWAGGER_URL;
@@ -12,5 +12,5 @@ await generateApi({
 	patch: true,
 	modular: true,
 	url,
-	output: resolve(import.meta.dir, './src/lib/server/iob/client')
+	output: resolve(cwd(), './src/lib/server/iob/client')
 });

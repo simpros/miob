@@ -1,12 +1,12 @@
 import { env } from '$env/dynamic/private';
-import { Database } from 'bun:sqlite';
-import { drizzle } from 'drizzle-orm/bun-sqlite';
-import { migrate as drizzle_migrate } from 'drizzle-orm/bun-sqlite/migrator';
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
+import { migrate as drizzle_migrate } from 'drizzle-orm/libsql/migrator';
 import * as schema from './schema';
 
 if (!env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
 
-const client = new Database(env.DATABASE_URL);
+const client = createClient({ url: env.DATABASE_URL });
 export const db = drizzle({
 	client,
 	schema
