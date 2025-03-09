@@ -4,9 +4,9 @@ import { drizzle } from 'drizzle-orm/libsql';
 import { migrate as drizzle_migrate } from 'drizzle-orm/libsql/migrator';
 import * as schema from './schema';
 
-if (!env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
+const url = env.DATABASE_URL ?? 'file:data/local.db';
 
-const client = createClient({ url: env.DATABASE_URL });
+const client = createClient({ url });
 export const db = drizzle({
 	client,
 	schema

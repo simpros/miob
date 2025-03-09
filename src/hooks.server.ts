@@ -2,7 +2,7 @@ import { env } from '$env/dynamic/private';
 import { db, enableDefaultPragmas, migrate } from '$lib/server/db/db';
 import { Api } from '$lib/server/iob/client/Api';
 import { syncEntities } from '$lib/server/iob/common/sync-entities';
-import { type Handle, type ServerInit } from '@sveltejs/kit';
+import { redirect, type Handle, type ServerInit } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 export const init: ServerInit = async () => {
@@ -22,11 +22,11 @@ const initializeDb: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-// const reroute: Handle = async ({ event, resolve }) => {
-// 	if (event.url.pathname === '/') {
-// 		redirect(307, '/app/c');
-// 	}
-// 	return resolve(event);
-// };
+const reroute: Handle = async ({ event, resolve }) => {
+	if (event.url.pathname === '/') {
+		redirect(307, '/lighting');
+	}
+	return resolve(event);
+};
 
-export const handle = sequence(initializeIob, initializeDb);
+export const handle = sequence(initializeIob, initializeDb, reroute);
