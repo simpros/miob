@@ -3,7 +3,16 @@ import type { AllLights } from './get-all-lights';
 import { generateIdentifierForState } from './light-utils';
 
 export async function getLightStates(entities: AllLights, api: Api<unknown>) {
-	const [shellySwitches, zigbeeSwitches, shellyBrightness, zigbeeBrightness] = await Promise.all([
+	const [
+		shellySwitchState,
+		shellyDimmerState,
+		zigbeeState,
+		shellyDimmerBrightness,
+		zigbeeBrightness
+	] = await Promise.all([
+		api.states
+			.listStates({ filter: generateIdentifierForState('shelly.*', 'switch', 'state') })
+			.then((res) => res.data),
 		api.states
 			.listStates({ filter: generateIdentifierForState('shelly.*', 'dimmer', 'state') })
 			.then((res) => res.data),
@@ -18,8 +27,8 @@ export async function getLightStates(entities: AllLights, api: Api<unknown>) {
 			.then((res) => res.data)
 	]);
 
-	const switches = { ...shellySwitches, ...zigbeeSwitches };
-	const brightness = { ...shellyBrightness, ...zigbeeBrightness };
+	const switches = { ...shellySwitchState, ...shellyDimmerState, ...zigbeeState };
+	const brightness = { ...shellyDimmerBrightness, ...zigbeeBrightness };
 
 	const lights = entities.map(
 		(entity) =>
